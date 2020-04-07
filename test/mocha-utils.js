@@ -88,7 +88,7 @@ if (process.argv.some(part => part.includes('mocha'))) {
     state.isFirefox = isFirefox;
     state.isChrome = isChrome;
     state.isHeadless = isHeadless;
-    state.puppeteerPath = path.resolve(path.join(__dirname, '..', 'index.js'));
+    state.puppeteerPath = path.resolve(path.join(__dirname, '..'));
   });
 
   beforeEach(async() => {
