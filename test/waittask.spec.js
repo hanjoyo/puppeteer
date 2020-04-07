@@ -458,7 +458,7 @@ describeFailsFirefox('Frame.waitForSelector', function() {
 
     let error;
     await page.waitForSelector('.zombo', {timeout: 10}).catch(e => error = e);
-    expect(error.stack).toContain('waittask.mocha.spec.js');
+    expect(error.stack).toContain('waittask.spec.js');
   });
 });
 

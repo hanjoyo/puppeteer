@@ -1243,17 +1243,16 @@ describe('Page', function() {
   });
 
   describe('printing to PDF', function() {
-    const {isHeadless} = getTestState();
+    itFailsFirefox('can print to PDF and save to file', async() => {
     // Printing to pdf is currently only supported in headless
-    (isHeadless ? describeFailsFirefox : xdescribe)('Page.pdf', function() {
-      it('should be able to save file', async() => {
-        const { page, server } = getTestState();
+      const {isHeadless, page} = getTestState();
 
-        const outputFile = __dirname + '/assets/output.pdf';
-        await page.pdf({path: outputFile});
-        expect(fs.readFileSync(outputFile).byteLength).toBeGreaterThan(0);
-        fs.unlinkSync(outputFile);
-      });
+      if (!isHeadless) return;
+
+      const outputFile = __dirname + '/assets/output.pdf';
+      await page.pdf({path: outputFile});
+      expect(fs.readFileSync(outputFile).byteLength).toBeGreaterThan(0);
+      fs.unlinkSync(outputFile);
     });
   });
 

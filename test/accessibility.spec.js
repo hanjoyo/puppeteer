@@ -17,7 +17,7 @@
 const expect = require('expect');
 const {getTestState} = require('./mocha-utils');
 
-describeFailsFirefox('Accessibility', function() {
+describe('Accessibility', function() {
   it('should work', async() => {
     const { page, isFirefox } = getTestState();
 
