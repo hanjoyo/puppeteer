@@ -1,6 +1,8 @@
 const {TestServer} = require('../utils/testserver/index');
 const path = require('path');
+const fs = require('fs');
 const puppeteer = require('../');
+const utils = require('./utils');
 
 const setupServer = async() => {
   const assetsPath = path.join(__dirname, 'assets');
@@ -38,6 +40,17 @@ const defaultBrowserOptions = {
   headless: isHeadless,
   dumpio: !!process.env.DUMPIO,
 };
+
+const setupGoldenAssertions = () => {
+  const suffix = product.toLowerCase();
+  const GOLDEN_DIR = path.join(__dirname, 'golden-' + suffix);
+  const OUTPUT_DIR = path.join(__dirname, 'output-' + suffix);
+  if (fs.existsSync(OUTPUT_DIR))
+    rm(OUTPUT_DIR);
+  utils.extendExpectWithToBeGolden(GOLDEN_DIR, OUTPUT_DIR);
+};
+
+setupGoldenAssertions();
 
 const state = {};
 

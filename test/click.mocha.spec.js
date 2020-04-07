@@ -1,5 +1,3 @@
-const expect = require('expect');
-const {getTestState} = require('./mocha-utils');
 /**
  * Copyright 2018 Google Inc. All rights reserved.
  *
@@ -16,6 +14,8 @@ const {getTestState} = require('./mocha-utils');
  * limitations under the License.
  */
 
+const expect = require('expect');
+const {getTestState} = require('./mocha-utils');
 const utils = require('./utils');
 
 describe('Page.click', function() {
