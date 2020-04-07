@@ -31,6 +31,13 @@ const product = process.env.PRODUCT || 'Chromium';
 const isHeadless = (process.env.HEADLESS || 'true').trim().toLowerCase() === 'true';
 const isFirefox = product === 'firefox';
 const isChrome = product === 'Chromium';
+const defaultBrowserOptions = {
+  handleSIGINT: false,
+  executablePath: process.env.BINARY,
+  slowMo: false,
+  headless: isHeadless,
+  dumpio: !!process.env.DUMPIO,
+};
 
 const state = {};
 
@@ -57,15 +64,9 @@ if (process.argv.some(part => part.includes('mocha'))) {
   };
 
   before(async() => {
-    const defaultBrowserOptions = {
-      handleSIGINT: false,
-      executablePath: process.env.BINARY,
-      slowMo: false,
-      headless: isHeadless,
-      dumpio: !!process.env.DUMPIO,
-    };
 
     state.puppeteer = puppeteer;
+    state.defaultBrowserOptions = defaultBrowserOptions;
     state.browser = await puppeteer.launch(defaultBrowserOptions);
     state.server = await setupServer();
     state.isFirefox = isFirefox;
