@@ -15,15 +15,15 @@ const setupServer = async() => {
   server.PREFIX = `http://localhost:${port}`;
   server.CROSS_PROCESS_PREFIX = `http://127.0.0.1:${port}`;
   server.EMPTY_PAGE = `http://localhost:${port}/empty.html`;
-  // const httpsPort = port + 1;
-  // httpsServer = await TestServer.createHTTPS(assetsPath, httpsPort);
-  // httpsServer.enableHTTPCache(cachedPath);
-  // httpsServer.PORT = httpsPort;
-  // httpsServer.PREFIX = `https://localhost:${httpsPort}`;
-  // httpsServer.CROSS_PROCESS_PREFIX = `https://127.0.0.1:${httpsPort}`;
-  // httpsServer.EMPTY_PAGE = `https://localhost:${httpsPort}/empty.html`;
+  const httpsPort = port + 1;
+  const httpsServer = await TestServer.createHTTPS(assetsPath, httpsPort);
+  httpsServer.enableHTTPCache(cachedPath);
+  httpsServer.PORT = httpsPort;
+  httpsServer.PREFIX = `https://localhost:${httpsPort}`;
+  httpsServer.CROSS_PROCESS_PREFIX = `https://127.0.0.1:${httpsPort}`;
+  httpsServer.EMPTY_PAGE = `https://localhost:${httpsPort}/empty.html`;
 
-  return server;
+  return {server, httpsServer};
 };
 
 exports.getTestState = () => state;
@@ -78,10 +78,13 @@ if (process.argv.some(part => part.includes('mocha'))) {
 
   before(async() => {
 
+    const {server, httpsServer} = await setupServer();
+
     state.puppeteer = puppeteer;
     state.defaultBrowserOptions = defaultBrowserOptions;
     state.browser = await puppeteer.launch(defaultBrowserOptions);
-    state.server = await setupServer();
+    state.server = server;
+    state.httpsServer = httpsServer;
     state.isFirefox = isFirefox;
     state.isChrome = isChrome;
     state.isHeadless = isHeadless;
@@ -90,6 +93,7 @@ if (process.argv.some(part => part.includes('mocha'))) {
 
   beforeEach(async() => {
     state.server.reset();
+    state.httpsServer.reset();
     state.context = await state.browser.createIncognitoBrowserContext();
     state.page = await state.context.newPage();
   });
@@ -113,5 +117,6 @@ if (process.argv.some(part => part.includes('mocha'))) {
     await state.browser.close();
     state.browser = null;
     await state.server.stop();
+    await state.httpsServer.stop();
   });
 }
